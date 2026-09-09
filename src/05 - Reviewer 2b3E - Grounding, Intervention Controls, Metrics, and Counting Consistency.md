@@ -4,11 +4,7 @@
 
 ### Localization, recognition, and Attribute Binding
 
-We agree with the reviewer that our original statement that
-
-“the residual error is AB itself, not localization” was too strong. We have
-
-removed this statement and no longer treat visual prompting as a clean
+We agree with the reviewer that our original statement that “the residual error is AB itself, not localization” was too strong. We have removed this statement and no longer treat visual prompting as a clean
 
 localization--binding decomposition.
 
