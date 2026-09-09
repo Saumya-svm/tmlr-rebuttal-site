@@ -59,9 +59,7 @@ We agree that relevant-region extraction combines multiple changes, including re
 
 A non-model-driven cropping control is already included through **MIMO-Crop**. In MIMO-Crop, a local window is constructed around the ground-truth target using benchmark annotations, independently of the evaluated MLLM, while retaining the objects required by the referring expression. Thus, MIMO-Crop tests the benefit of externally providing a relevant local region, whereas relevant-region extraction tests whether the model can itself identify such a region before being re-queried.
 
-Across **23,109 valid predicted crops**, the mean crop size is approximately 459\times479 pixels (232{,}227 px^2), corresponding to **12.43%**
-
-of the original image area. This is close in spatial scale to our 512\times512 MIMO-Crop condition.
+For the relevant region extraction experiment in the paper, the mean crop size is approximately 459\times479 pixels, corresponding to **12.43%** of the original image area. This is close in spatial scale to our 512\times512 MIMO-Crop condition.
 
 We additionally compute the IoU between each model-proposed crop and the ground-truth target box and report final-answer accuracy conditioned on predicted-region quality.
 
