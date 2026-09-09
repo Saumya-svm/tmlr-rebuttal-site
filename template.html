@@ -1,0 +1,442 @@
+<title>MIMO-Bench Rebuttal</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+<style>
+  :root {
+    color-scheme: light;
+    --ground: #f4f6f7;
+    --panel: #ffffff;
+    --ink: #14181d;
+    --muted: #5c6773;
+    --faint: #8b95a1;
+    --rule: #dde3e8;
+    --rule-soft: #eaeef1;
+    --accent: #1c5d78;
+    --accent-wash: #e7eff3;
+    --critical: #96322a;
+    --critical-wash: #f7e9e7;
+    --strengthening: #45624a;
+    --strengthening-wash: #e8efe9;
+    --serif: "Source Serif 4", Charter, Georgia, "Times New Roman", serif;
+    --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --measure: 68ch;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --ground: #0f1317;
+      --panel: #151a1f;
+      --ink: #dfe5ea;
+      --muted: #98a4b0;
+      --faint: #68737f;
+      --rule: #262e36;
+      --rule-soft: #1d242b;
+      --accent: #74b8d4;
+      --accent-wash: #17272f;
+      --critical: #e0897c;
+      --critical-wash: #2c1d1b;
+      --strengthening: #92b899;
+      --strengthening-wash: #1a241c;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --ground: #0f1317;
+    --panel: #151a1f;
+    --ink: #dfe5ea;
+    --muted: #98a4b0;
+    --faint: #68737f;
+    --rule: #262e36;
+    --rule-soft: #1d242b;
+    --accent: #74b8d4;
+    --accent-wash: #17272f;
+    --critical: #e0897c;
+    --critical-wash: #2c1d1b;
+    --strengthening: #92b899;
+    --strengthening-wash: #1a241c;
+  }
+
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.62;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+
+  .layout { display: flex; align-items: flex-start; gap: 0; }
+
+  /* ---------- reviewer rail ---------- */
+  .rail {
+    position: sticky;
+    top: 0;
+    flex: 0 0 20.5rem;
+    height: 100vh;
+    overflow-y: auto;
+    padding: 2.25rem 1.5rem 3rem 2rem;
+    background: var(--panel);
+    border-right: 1px solid var(--rule);
+    font-family: var(--sans);
+  }
+  .eyebrow {
+    font-family: var(--sans);
+    font-size: .68rem;
+    font-weight: 500;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+  .rail-title {
+    margin: .45rem 0 1.9rem;
+    font-family: var(--serif);
+    font-size: 1.22rem;
+    font-weight: 600;
+    line-height: 1.3;
+    text-wrap: balance;
+  }
+  .rail ol { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: .15rem; }
+
+  .doc-link {
+    display: grid;
+    grid-template-columns: 1.9rem 1fr;
+    gap: .3rem;
+    padding: .5rem .6rem .5rem .55rem;
+    border-radius: 5px;
+    border-left: 2px solid transparent;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: .84rem;
+    line-height: 1.38;
+  }
+  .doc-link:hover { background: var(--rule-soft); color: var(--ink); }
+  .doc-link[aria-current="true"] {
+    background: var(--accent-wash);
+    border-left-color: var(--accent);
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .doc-num { font-variant-numeric: tabular-nums; color: var(--faint); font-weight: 500; }
+
+  .rail .requests {
+    list-style: none;
+    margin: .3rem 0 .9rem;
+    padding: 0 0 0 2.45rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+  .rail .requests a {
+    display: grid;
+    grid-template-columns: 1.7rem 1fr;
+    gap: .25rem;
+    padding: .28rem 0 .28rem .65rem;
+    border-left: 1px solid var(--rule);
+    color: var(--muted);
+    text-decoration: none;
+    font-size: .765rem;
+    line-height: 1.35;
+  }
+  .rail .requests a:hover { color: var(--accent); border-left-color: var(--accent); }
+  .rail .requests .n { font-weight: 600; font-variant-numeric: tabular-nums; color: var(--faint); }
+  .rail .requests a:hover .n { color: var(--accent); }
+  .rail .requests .dot {
+    display: inline-block;
+    width: .38rem; height: .38rem;
+    border-radius: 50%;
+    margin-left: .3rem;
+    vertical-align: .05rem;
+    background: var(--critical);
+  }
+
+  /* ---------- article ---------- */
+  main { flex: 1 1 auto; min-width: 0; padding: 3.25rem 3.5rem 7rem; }
+  article { max-width: var(--measure); margin: 0 auto; }
+  .doc-head { margin-bottom: 2.4rem; padding-bottom: 1.3rem; border-bottom: 1px solid var(--rule); }
+  .doc-head h1 {
+    margin: .5rem 0 0;
+    font-size: 1.9rem;
+    font-weight: 600;
+    line-height: 1.24;
+    text-wrap: balance;
+  }
+  .doc-tally {
+    margin-top: .85rem;
+    font-family: var(--sans);
+    font-size: .78rem;
+    color: var(--muted);
+  }
+
+  /* Requested-change header: number and severity sit above the title. */
+  .body .request {
+    display: flex;
+    flex-direction: column;
+    gap: .4rem;
+    margin: 3.1rem 0 1.05rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+    scroll-margin-top: 1.25rem;
+  }
+  .body .request:first-child { margin-top: 0; padding-top: 0; border-top: 0; }
+  .request-meta { display: flex; align-items: center; gap: .55rem; }
+  .request-num {
+    font-family: var(--sans);
+    font-size: .7rem;
+    font-weight: 600;
+    letter-spacing: .1em;
+    color: var(--accent);
+  }
+  .chip {
+    font-family: var(--sans);
+    font-size: .64rem;
+    font-weight: 600;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    padding: .17rem .45rem;
+    border-radius: 3px;
+  }
+  .chip-critical { color: var(--critical); background: var(--critical-wash); }
+  .chip-strengthening { color: var(--strengthening); background: var(--strengthening-wash); }
+  .request-title { font-size: 1.3rem; font-weight: 600; line-height: 1.32; text-wrap: balance; }
+
+  .body h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1.32;
+    margin: 2.8rem 0 1rem;
+    scroll-margin-top: 1.25rem;
+  }
+  .body h3 { font-size: 1.06rem; font-weight: 600; margin: 2rem 0 .55rem; }
+  .body h4 {
+    font-family: var(--sans);
+    font-size: .84rem;
+    font-weight: 600;
+    letter-spacing: .01em;
+    margin: 1.6rem 0 .45rem;
+    color: var(--muted);
+  }
+  .body p { margin: 0 0 1.05rem; }
+  .body ul, .body ol { margin: 0 0 1.1rem; padding-left: 1.3rem; }
+  .body li { margin-bottom: .4rem; }
+  .body li::marker { color: var(--faint); }
+  .body strong { font-weight: 600; }
+  .body hr { border: 0; border-top: 1px solid var(--rule); margin: 2.4rem 0; }
+  .body blockquote {
+    margin: 1.25rem 0;
+    padding-left: 1.1rem;
+    border-left: 2px solid var(--rule);
+    color: var(--muted);
+  }
+  .body code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: .84em;
+    background: var(--rule-soft);
+    padding: .1em .32em;
+    border-radius: 3px;
+  }
+  .body pre {
+    background: var(--rule-soft);
+    padding: .95rem 1.1rem;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: .82rem;
+    line-height: 1.55;
+  }
+  .body pre code { background: none; padding: 0; }
+  .body math { font-size: 1.02em; }
+
+  /* ---------- result tables ---------- */
+  .table-scroll { overflow-x: auto; margin: 1.4rem 0 1.7rem; }
+  .body table {
+    border-collapse: collapse;
+    min-width: 100%;
+    font-family: var(--sans);
+    font-size: .795rem;
+    line-height: 1.4;
+    font-variant-numeric: tabular-nums;
+  }
+  .body th, .body td {
+    padding: .44rem .75rem;
+    text-align: right;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+  .body th:first-child, .body td:first-child,
+  .body th:nth-child(2), .body td:nth-child(2) { text-align: left; }
+  .body thead th {
+    border-bottom: 1px solid var(--rule);
+    font-size: .69rem;
+    font-weight: 600;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    vertical-align: bottom;
+  }
+  .body tbody tr:last-child td { border-bottom: 0; }
+  .body table em { color: var(--muted); font-style: normal; }
+
+  /* ---------- pager ---------- */
+  .pager {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+    margin-top: 4.5rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--rule);
+    font-family: var(--sans);
+  }
+  .pager a { max-width: 46%; text-decoration: none; color: var(--ink); font-size: .87rem; line-height: 1.35; }
+  .pager a:hover { color: var(--accent); }
+  .pager .dir { display: block; font-size: .66rem; letter-spacing: .13em; text-transform: uppercase; color: var(--faint); margin-bottom: .2rem; }
+  .pager .next { text-align: right; margin-left: auto; }
+
+  @media (max-width: 960px) {
+    .layout { display: block; }
+    .rail {
+      position: static;
+      height: auto;
+      width: 100%;
+      padding: 1.5rem 1.25rem;
+      border-right: 0;
+      border-bottom: 1px solid var(--rule);
+    }
+    .rail .requests { display: none; }
+    main { padding: 2rem 1.25rem 4rem; }
+    .doc-head h1 { font-size: 1.5rem; }
+    .request-title { font-size: 1.15rem; }
+  }
+</style>
+
+<div class="layout">
+  <aside class="rail">
+    <div class="eyebrow">TMLR &middot; Response to Reviewers</div>
+    <div class="rail-title">MIMO-Bench</div>
+    <nav aria-label="Reviewers"><ol id="nav"></ol></nav>
+  </aside>
+  <main>
+    <article>
+      <header class="doc-head">
+        <div class="eyebrow" id="doc-kicker"></div>
+        <h1 id="doc-title"></h1>
+        <div class="doc-tally" id="doc-tally"></div>
+      </header>
+      <div class="body" id="doc-body"></div>
+      <nav class="pager" id="pager" aria-label="Reviewers"></nav>
+    </article>
+  </main>
+</div>
+
+<script>
+const DOCS = /*__DOCS__*/null;
+
+const el = (tag, cls) => {
+  const n = document.createElement(tag);
+  if (cls) n.className = cls;
+  return n;
+};
+
+function activeIndex() {
+  const id = location.hash.startsWith("#/") ? location.hash.slice(2) : null;
+  const i = DOCS.findIndex((d) => d.id === id);
+  return i === -1 ? 0 : i;
+}
+
+function buildNav(active) {
+  const nav = document.getElementById("nav");
+  nav.textContent = "";
+  DOCS.forEach((doc, i) => {
+    const li = el("li");
+    const a = el("a", "doc-link");
+    a.href = "#/" + doc.id;
+    if (i === active) a.setAttribute("aria-current", "true");
+    const num = el("span", "doc-num");
+    num.textContent = doc.id;
+    const label = el("span");
+    label.textContent = doc.nav;
+    a.append(num, label);
+    li.append(a);
+
+    if (i === active && doc.toc.length) {
+      const list = el("ul", "requests");
+      for (const item of doc.toc) {
+        const row = el("li");
+        const link = el("a");
+        link.href = "#" + item.id;
+        const n = el("span", "n");
+        n.textContent = item.num;
+        const t = el("span");
+        t.textContent = item.title;
+        if (item.kind === "critical") {
+          const dot = el("span", "dot");
+          dot.title = "Critical";
+          t.append(dot);
+        }
+        link.append(n, t);
+        row.append(link);
+        list.append(row);
+      }
+      li.append(list);
+    }
+    nav.append(li);
+  });
+}
+
+function buildPager(active) {
+  const pager = document.getElementById("pager");
+  pager.textContent = "";
+  const add = (doc, dir, cls) => {
+    const a = el("a", cls);
+    a.href = "#/" + doc.id;
+    const d = el("span", "dir");
+    d.textContent = dir;
+    const t = el("span");
+    t.textContent = doc.nav;
+    a.append(d, t);
+    pager.append(a);
+  };
+  if (active > 0) add(DOCS[active - 1], "Previous", "prev");
+  if (active < DOCS.length - 1) add(DOCS[active + 1], "Next", "next");
+}
+
+function tally(doc) {
+  if (!doc.counts.total) return "";
+  const n = doc.counts.total;
+  const crit = doc.counts.critical;
+  const base = n + (n === 1 ? " requested change" : " requested changes");
+  return crit ? base + " · " + crit + " marked critical" : base;
+}
+
+function render() {
+  const i = activeIndex();
+  const doc = DOCS[i];
+  document.getElementById("doc-kicker").textContent =
+    doc.id === "00" ? "Index" : "Response " + doc.id;
+  document.getElementById("doc-title").textContent = doc.title;
+  document.getElementById("doc-tally").textContent = tally(doc);
+  document.getElementById("doc-body").innerHTML = doc.html;
+  buildNav(i);
+  buildPager(i);
+  document.title = doc.nav + " — MIMO-Bench Rebuttal";
+}
+
+// "#/03" switches document; a bare "#r2-..." is in-page navigation.
+let shown;
+function route() {
+  const id = location.hash.startsWith("#/") ? location.hash.slice(2) : shown;
+  if (id === shown) return;
+  shown = id;
+  render();
+  window.scrollTo(0, 0);
+}
+
+shown = DOCS[activeIndex()].id;
+render();
+addEventListener("hashchange", route);
+</script>
