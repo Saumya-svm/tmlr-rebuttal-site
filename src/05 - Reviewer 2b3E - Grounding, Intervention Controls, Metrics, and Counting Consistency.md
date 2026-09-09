@@ -23,7 +23,9 @@ In *box-choice grounding*, the original RE is retained and four candidate instan
 | InternVL3.5-8B | Box-choice | 21.0 | 29.4 | 17.2 | 32.4 | 50.4 | 41.6 | 34.7 | +6.9 |
 |  | Coordinates | 7.0 | 11.0 | 28.9 | 53.0 | 18.1 | 38.9 | 35.3 | +3.6 |
 
-*Explicit RE-grounding outcomes and their correspondence with Attribute Binding (AB) answers on matched examples. Cells report the percentage of the evaluation set falling in each outcome. $G^+$/$G^-$ denote correct/incorrect grounding and $A^+$/$A^-$ denote correct/incorrect AB answers. G-Acc. denotes grounding accuracy, and $\Delta=P(A^+|G^+)-P(A^+|G^-)$. All accuracies and conditional probabilities are percentages. Chance accuracy for box-choice grounding is 25%.* The box-choice evaluation shows that RE grounding itself remains imperfect (49.3--66.5%). More importantly, it lets us directly separate grounding success from the AB outcome behaviorally. For every evaluated model, P(A^+|G^+) is higher than P(A^+|G^-), with gains of 6.0--10.3 points.
+*Explicit RE-grounding outcomes and their correspondence with Attribute Binding (AB) answers on matched examples. Cells report the percentage of the evaluation set falling in each outcome. $G^+$/$G^-$ denote correct/incorrect grounding and $A^+$/$A^-$ denote correct/incorrect AB answers. G-Acc. denotes grounding accuracy, and $\Delta=P(A^+|G^+)-P(A^+|G^-)$. All accuracies and conditional probabilities are percentages. Chance accuracy for box-choice grounding is 25%.*
+
+The box-choice evaluation shows that RE grounding itself remains imperfect (49.3--66.5%). More importantly, it lets us directly separate grounding success from the AB outcome behaviorally. For every evaluated model, P(A^+|G^+) is higher than P(A^+|G^-), with gains of 6.0--10.3 points.
 
 However, even when the correct target is selected, AB accuracy remains only 41.6--61.9%. Thus, successful grounding improves AB performance but does not solve the task.
 
@@ -37,11 +39,7 @@ This format dependence motivated our original use of visual prompting rather tha
 
 AB has a fixed task definition and answer format, whereas explicit localization requires an additional design choice with its own confounds. We agree that the original paper nevertheless over-interpreted visual prompting, and the revised paper now makes this limitation explicit and reports both localization probes.
 
-**Visual prompting is therefore reinterpreted as a ground-truth**
-
-
-**
-target-specification condition, not a binding-only condition.**
+**Visual prompting is therefore reinterpreted as a ground-truth target-specification condition, not a binding-only condition.**
 
 It replaces the original compositional RE with a visual marker on the annotated target. The substantial IACC improvement shows that direct visual target specification removes a substantial part of the difficulty associated with RE-based target identification. However, because the marker itself modifies the image and must be perceived and interpreted, we do not claim that visual prompting constitutes perfect localization from the model's perspective, that its gain is a pure localization-error estimate, or that its residual error is pure AB/binding error.
 
@@ -79,7 +77,9 @@ We additionally compute the IoU between each model-proposed crop and the ground-
 | Qwen2.5-VL-7B                                           | 35.8     | 29.7     | 40.5     | 28.6     | 39.2     | 47.6     |
 | **Mean**                                                | **39.5** | **38.6** | **45.1** | **43.5** | **48.6** | **48.2** |
 
-*Final-answer accuracy conditioned on the IoU of the model-proposed crop with the ground-truth target box, compared with the full-image baseline and the externally constructed MIMO-Crop\_{512} condition.* Very poorly localized predicted crops (0--25% IoU) obtain 38.6% mean accuracy, at or slightly below the 39.5% full-image baseline, despite still involving the additional inference call and crop/re-query operation.
+*Final-answer accuracy conditioned on the IoU of the model-proposed crop with the ground-truth target box, compared with the full-image baseline and the externally constructed MIMO-Crop\_{512} condition.*
+
+Very poorly localized predicted crops (0--25% IoU) obtain 38.6% mean accuracy, at or slightly below the 39.5% full-image baseline, despite still involving the additional inference call and crop/re-query operation.
 
 In contrast, when the model proposes a region with 75--100% IoU, mean accuracy rises to 48.6%, approximately matching the 48.2% obtained by MIMO-Crop\_{512}.
 
@@ -189,11 +189,7 @@ We will revise this wording in the manuscript to make the intended interpretatio
 
 We thank the reviewer for suggesting an all-attributes-correct complement to G\_{\mathrm{ACC}}. As clarified above, the existing G\_{\mathrm{ACC}} is not an all-or-nothing metric: it first computes the fraction of valid attributes answered correctly for each target instance and then averages equally across instances.
 
-To additionally capture the stricter criterion suggested by the reviewer, we now report **Exact Group Accuracy**, under which a target instance is counted as correct only when **all of its valid attribute questions are answered**
-
-
-**
-correctly**.
+To additionally capture the stricter criterion suggested by the reviewer, we now report **Exact Group Accuracy**, under which a target instance is counted as correct only when **all of its valid attribute questions are answered correctly**.
 
 | **Model** | **Exact Group Accuracy** |
 |---|---:|
@@ -267,7 +263,9 @@ For each parent--children group g, we define the consistency error as [ e*g =*
 | IVL3.5-14B                                 | 53 | 3.8  | 4.72 | -4.42 |
 | IVL3.5-8B                                  | 53 | 3.8  | 3.98 | -3.79 |
 
-*Hierarchical consistency of numerical-counting predictions. Exact Cons. is the percentage of parent--children groups for which the predicted parent count equals the sum of the predicted child counts. MAE is the mean absolute parent--child-sum difference, and Bias is the mean signed difference (parent - child sum). These metrics measure internal consistency, not correctness against ground truth.* The results show that hierarchical consistency varies substantially across models. IVL3.5-241B-A28B is the most internally consistent, with 72.7% of eligible parent--children groups satisfying the hierarchy exactly, followed by Q3-32B-Thinking at 50.0%. In contrast, most models are exactly consistent on fewer than one-fifth of their evaluated groups. The MAE similarly varies considerably, from below one count for Q3-32B-Thinking to more than four counts for several InternVL variants.
+*Hierarchical consistency of numerical-counting predictions. Exact Cons. is the percentage of parent--children groups for which the predicted parent count equals the sum of the predicted child counts. MAE is the mean absolute parent--child-sum difference, and Bias is the mean signed difference (parent - child sum). These metrics measure internal consistency, not correctness against ground truth.*
+
+The results show that hierarchical consistency varies substantially across models. IVL3.5-241B-A28B is the most internally consistent, with 72.7% of eligible parent--children groups satisfying the hierarchy exactly, followed by Q3-32B-Thinking at 50.0%. In contrast, most models are exactly consistent on fewer than one-fifth of their evaluated groups. The MAE similarly varies considerably, from below one count for Q3-32B-Thinking to more than four counts for several InternVL variants.
 
 The signed bias is negative for all evaluated models. Thus, when global and localized predictions disagree, the model generally predicts fewer objects in the parent query than are obtained by summing its own localized child predictions. This complements our GMRA--LMRA analysis: the latter compares accuracy of global and localized counting against ground truth, whereas this experiment directly tests whether the model's global and localized predictions are mutually consistent.
 
