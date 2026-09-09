@@ -19,7 +19,10 @@
     --strengthening-wash: #e8efe9;
     --serif: "Source Serif 4", Charter, Georgia, "Times New Roman", serif;
     --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
-    --measure: 68ch;
+    /* Prose stays at a readable measure; the column itself is wider so the
+       result tables have room instead of scrolling inside a narrow strip. */
+    --measure: 74ch;
+    --column: 66rem;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
@@ -157,8 +160,17 @@
   }
 
   /* ---------- article ---------- */
-  main { flex: 1 1 auto; min-width: 0; padding: 3.25rem 3.5rem 7rem; }
-  article { max-width: var(--measure); margin: 0 auto; }
+  main { flex: 1 1 auto; min-width: 0; padding: 3.25rem 3.25rem 7rem; }
+  article { max-width: var(--column); margin: 0 auto; }
+  /* Text holds the measure; tables and rules run the full column width. */
+  .doc-head > *,
+  .body > p,
+  .body > ul,
+  .body > ol,
+  .body > blockquote,
+  .body > h2,
+  .body > h3,
+  .body > h4 { max-width: var(--measure); }
   .doc-head { margin-bottom: 2.4rem; padding-bottom: 1.3rem; border-bottom: 1px solid var(--rule); }
   .doc-head h1 {
     margin: .5rem 0 0;
@@ -204,7 +216,7 @@
   }
   .chip-critical { color: var(--critical); background: var(--critical-wash); }
   .chip-strengthening { color: var(--strengthening); background: var(--strengthening-wash); }
-  .request-title { font-size: 1.3rem; font-weight: 600; line-height: 1.32; text-wrap: balance; }
+  .request-title { max-width: var(--measure); font-size: 1.3rem; font-weight: 600; line-height: 1.32; text-wrap: balance; }
 
   .body h2 {
     font-size: 1.3rem;
@@ -309,6 +321,7 @@
     }
     .rail .requests { display: none; }
     main { padding: 2rem 1.25rem 4rem; }
+    article, .doc-head > *, .body > * , .request-title { max-width: 100%; }
     .doc-head h1 { font-size: 1.5rem; }
     .request-title { font-size: 1.15rem; }
   }
