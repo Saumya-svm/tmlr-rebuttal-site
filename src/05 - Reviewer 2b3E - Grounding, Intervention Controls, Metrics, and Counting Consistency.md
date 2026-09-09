@@ -4,33 +4,11 @@
 
 ### Localization, recognition, and Attribute Binding
 
-We agree with the reviewer that our original statement that “the residual error is AB itself, not localization” was too strong. We have removed this statement and no longer treat visual prompting as a clean
+We agree with the reviewer that our original statement that “the residual error is AB itself, not localization” was too strong. We have removed this statement and no longer treat visual prompting as a clean localization--binding decomposition.
 
-localization--binding decomposition.
+Following the reviewer's suggestion to add a predicted-localization evaluation, we now explicitly evaluate whether the original RE can be grounded to its ground-truth target. Because explicit localization itself requires choosing an output interface, we report two complementary formulations on the full evaluation set matched AB instances.
 
-Following the reviewer's suggestion to add a predicted-localization evaluation,
-
-we now explicitly evaluate whether the original RE can be grounded to its
-
-ground-truth target. Because explicit localization itself requires choosing an
-
-output interface, we report two complementary formulations on the full evaluation set
-
-matched AB instances.
-
-In *box-choice grounding*, the original RE is retained and four candidate
-
-instances are visually marked; the model selects the intended candidate. This
-
-provides a simple discrete grounding decision, but the boxes necessarily modify
-
-the visual input. In *coordinate grounding*, the image is left unchanged
-
-and the model predicts the target coordinates from the original RE. This avoids
-
-marker overlays but introduces the additional requirement of producing a
-
-precise spatial output.
+In *box-choice grounding*, the original RE is retained and four candidate instances are visually marked; the model selects the intended candidate. This provides a simple discrete grounding decision, but the boxes necessarily modify the visual input. In *coordinate grounding*, the image is left unchanged and the model predicts the target coordinates from the original RE. This avoids marker overlays but introduces the additional requirement of producing a precise spatial output.
 
 | **Model** | **Grounding** | $\mathbf{G^+A^+}$ | $\mathbf{G^+A^-}$ | $\mathbf{G^-A^+}$ | $\mathbf{G^-A^-}$ | **G-Acc.** | $\mathbf{P(A^+\mid G^+)}$ | $\mathbf{P(A^+\mid G^-)}$ | $\boldsymbol{\Delta}$ |
 |---|---|---:|---:|---:|---:|---:|---:|---:|---:|
@@ -45,61 +23,19 @@ precise spatial output.
 | InternVL3.5-8B | Box-choice | 21.0 | 29.4 | 17.2 | 32.4 | 50.4 | 41.6 | 34.7 | +6.9 |
 |  | Coordinates | 7.0 | 11.0 | 28.9 | 53.0 | 18.1 | 38.9 | 35.3 | +3.6 |
 
-*Explicit RE-grounding outcomes and their correspondence with Attribute Binding (AB) answers on matched examples. Cells report the percentage of the evaluation set falling in each outcome. $G^+$/$G^-$ denote correct/incorrect grounding and $A^+$/$A^-$ denote correct/incorrect AB answers. G-Acc. denotes grounding accuracy, and $\Delta=P(A^+|G^+)-P(A^+|G^-)$. All accuracies and conditional probabilities are percentages. Chance accuracy for box-choice grounding is 25%.*
+*Explicit RE-grounding outcomes and their correspondence with Attribute Binding (AB) answers on matched examples. Cells report the percentage of the evaluation set falling in each outcome. $G^+$/$G^-$ denote correct/incorrect grounding and $A^+$/$A^-$ denote correct/incorrect AB answers. G-Acc. denotes grounding accuracy, and $\Delta=P(A^+|G^+)-P(A^+|G^-)$. All accuracies and conditional probabilities are percentages. Chance accuracy for box-choice grounding is 25%.* The box-choice evaluation shows that RE grounding itself remains imperfect (49.3--66.5%). More importantly, it lets us directly separate grounding success from the AB outcome behaviorally. For every evaluated model, P(A^+|G^+) is higher than P(A^+|G^-), with gains of 6.0--10.3 points.
 
-The box-choice evaluation shows that RE grounding itself remains imperfect
+However, even when the correct target is selected, AB accuracy remains only 41.6--61.9%. Thus, successful grounding improves AB performance but does not solve the task.
 
-(49.3--66.5%). More importantly, it lets us directly separate grounding
+We agree with the reviewer that the remaining G^+A^- cases should not all be called binding failures. They can include fine-grained color, pattern, material, or component recognition; small or occluded components; component identification/localization; preprocessing or visual-token effects; as well as genuine cross-instance attribute misbinding.
 
-success from the AB outcome behaviorally. For every evaluated model,
+The coordinate results additionally make clear why a perfectly clean grounding--binding decomposition is difficult to obtain behaviorally.
 
-P(A^+|G^+) is higher than P(A^+|G^-), with gains of 6.0--10.3 points.
+Coordinate localization, despite leaving the image unmodified, is much weaker (9.8--26.5%) and shows a less uniform relationship with AB success. This does not allow us to conclude simply that the model “cannot localize”: coordinate prediction couples RE grounding with precise spatial-output generation. The box-choice formulation avoids that requirement, but changes the image through candidate overlays. Thus, the localization measurement itself depends substantially on its elicitation format.
 
-However, even when the correct target is selected, AB accuracy remains only
+This format dependence motivated our original use of visual prompting rather than inserting a separate localization prediction stage into the benchmark:
 
-41.6--61.9%. Thus, successful grounding improves AB performance but does not
-
-solve the task.
-
-We agree with the reviewer that the remaining G^+A^- cases should not all
-
-be called binding failures. They can include fine-grained color, pattern,
-
-material, or component recognition; small or occluded components; component
-
-identification/localization; preprocessing or visual-token effects; as well as
-
-genuine cross-instance attribute misbinding.
-
-The coordinate results additionally make clear why a perfectly clean
-
-grounding--binding decomposition is difficult to obtain behaviorally.
-
-Coordinate localization, despite leaving the image unmodified, is much weaker
-
-(9.8--26.5%) and shows a less uniform relationship with AB success. This does
-
-not allow us to conclude simply that the model “cannot localize”: coordinate
-
-prediction couples RE grounding with precise spatial-output generation. The
-
-box-choice formulation avoids that requirement, but changes the image through
-
-candidate overlays. Thus, the localization measurement itself depends
-
-substantially on its elicitation format.
-
-This format dependence motivated our original use of visual prompting rather
-
-than inserting a separate localization prediction stage into the benchmark:
-
-AB has a fixed task definition and answer format, whereas explicit localization
-
-requires an additional design choice with its own confounds. We agree that the
-
-original paper nevertheless over-interpreted visual prompting, and the revised
-
-paper now makes this limitation explicit and reports both localization probes.
+AB has a fixed task definition and answer format, whereas explicit localization requires an additional design choice with its own confounds. We agree that the original paper nevertheless over-interpreted visual prompting, and the revised paper now makes this limitation explicit and reports both localization probes.
 
 **Visual prompting is therefore reinterpreted as a ground-truth**
 
@@ -107,39 +43,13 @@ paper now makes this limitation explicit and reports both localization probes.
 **
 target-specification condition, not a binding-only condition.**
 
-It replaces the original compositional RE with a visual marker on the annotated
+It replaces the original compositional RE with a visual marker on the annotated target. The substantial IACC improvement shows that direct visual target specification removes a substantial part of the difficulty associated with RE-based target identification. However, because the marker itself modifies the image and must be perceived and interpreted, we do not claim that visual prompting constitutes perfect localization from the model's perspective, that its gain is a pure localization-error estimate, or that its residual error is pure AB/binding error.
 
-target. The substantial IACC improvement shows that direct visual target
+The revised analysis therefore uses complementary evidence rather than clean causal isolation: predicted-localization probes measure explicit RE grounding;
 
-specification removes a substantial part of the difficulty associated with
+matched grounding--AB outcomes expose both grounding failures and grounding-success/AB-failure cases; and visual prompting measures performance when the target is externally specified.
 
-RE-based target identification. However, because the marker itself modifies the
-
-image and must be perceived and interpreted, we do not claim that visual
-
-prompting constitutes perfect localization from the model's perspective, that
-
-its gain is a pure localization-error estimate, or that its residual error is
-
-pure AB/binding error.
-
-The revised analysis therefore uses complementary evidence rather than clean
-
-causal isolation: predicted-localization probes measure explicit RE grounding;
-
-matched grounding--AB outcomes expose both grounding failures and
-
-grounding-success/AB-failure cases; and visual prompting measures performance
-
-when the target is externally specified.
-
-Finally, the benchmark already contains the ground-truth localization associated
-
-with each target and referring expression. We will release these target
-
-mask/bounding-box coordinates with MIMO-Bench, allowing future work to evaluate
-
-alternative localization interfaces and metrics directly.
+Finally, the benchmark already contains the ground-truth localization associated with each target and referring expression. We will release these target mask/bounding-box coordinates with MIMO-Bench, allowing future work to evaluate alternative localization interfaces and metrics directly.
 
 ---
 
@@ -149,41 +59,15 @@ alternative localization interfaces and metrics directly.
 
 ### Controls for relevant-region extraction
 
-We agree that relevant-region extraction combines multiple changes, including
+We agree that relevant-region extraction combines multiple changes, including region selection, target rescaling, distractor reduction, and an additional inference call. We therefore add a localization-quality analysis and compare the model-selected crops against an externally constructed cropping control.
 
-region selection, target rescaling, distractor reduction, and an additional
+A non-model-driven cropping control is already included through **MIMO-Crop**. In MIMO-Crop, a local window is constructed around the ground-truth target using benchmark annotations, independently of the evaluated MLLM, while retaining the objects required by the referring expression. Thus, MIMO-Crop tests the benefit of externally providing a relevant local region, whereas relevant-region extraction tests whether the model can itself identify such a region before being re-queried.
 
-inference call. We therefore add a localization-quality analysis and compare
+Across **23,109 valid predicted crops**, the mean crop size is approximately 459\times479 pixels (232{,}227 px^2), corresponding to **12.43%**
 
-the model-selected crops against an externally constructed cropping control.
+of the original image area. This is close in spatial scale to our 512\times512 MIMO-Crop condition.
 
-A non-model-driven cropping control is already included through
-
-**MIMO-Crop**. In MIMO-Crop, a local window is constructed around the
-
-ground-truth target using benchmark annotations, independently of the evaluated
-
-MLLM, while retaining the objects required by the referring expression. Thus,
-
-MIMO-Crop tests the benefit of externally providing a relevant local region,
-
-whereas relevant-region extraction tests whether the model can itself identify
-
-such a region before being re-queried.
-
-Across **23,109 valid predicted crops**, the mean crop size is approximately
-
-459\times479 pixels (232{,}227 px^2), corresponding to **12.43%**
-
-of the original image area. This is close in spatial scale to our
-
-512\times512 MIMO-Crop condition.
-
-We additionally compute the IoU between each model-proposed crop and the
-
-ground-truth target box and report final-answer accuracy conditioned on
-
-predicted-region quality.
+We additionally compute the IoU between each model-proposed crop and the ground-truth target box and report final-answer accuracy conditioned on predicted-region quality.
 
 | **Model** | **Base** | **0--25** | **25--50** | **50--75** | **75--100** | **MIMO-Crop$_{512}$** |
 |---|---:|---:|---:|---:|---:|---:|
@@ -195,37 +79,13 @@ predicted-region quality.
 | Qwen2.5-VL-7B                                           | 35.8     | 29.7     | 40.5     | 28.6     | 39.2     | 47.6     |
 | **Mean**                                                | **39.5** | **38.6** | **45.1** | **43.5** | **48.6** | **48.2** |
 
-*Final-answer accuracy conditioned on the IoU of the model-proposed crop with the ground-truth target box, compared with the full-image baseline and the externally constructed MIMO-Crop\_{512} condition.*
+*Final-answer accuracy conditioned on the IoU of the model-proposed crop with the ground-truth target box, compared with the full-image baseline and the externally constructed MIMO-Crop\_{512} condition.* Very poorly localized predicted crops (0--25% IoU) obtain 38.6% mean accuracy, at or slightly below the 39.5% full-image baseline, despite still involving the additional inference call and crop/re-query operation.
 
-Very poorly localized predicted crops (0--25% IoU) obtain 38.6% mean
+In contrast, when the model proposes a region with 75--100% IoU, mean accuracy rises to 48.6%, approximately matching the 48.2% obtained by MIMO-Crop\_{512}.
 
-accuracy, at or slightly below the 39.5% full-image baseline, despite
+The relationship is not strictly monotonic at intermediate IoUs because many MIMO referring expressions require contextual objects outside the target box itself. We therefore treat IoU as a proxy for localization quality rather than a complete measure of crop usefulness.
 
-still involving the additional inference call and crop/re-query operation.
-
-In contrast, when the model proposes a region with 75--100% IoU, mean
-
-accuracy rises to 48.6%, approximately matching the 48.2% obtained by
-
-MIMO-Crop\_{512}.
-
-The relationship is not strictly monotonic at intermediate IoUs because many
-
-MIMO referring expressions require contextual objects outside the target box
-
-itself. We therefore treat IoU as a proxy for localization quality rather
-
-than a complete measure of crop usefulness.
-
-These results do not isolate region selection, rescaling, distractor reduction,
-
-and the additional model call as independent causal factors. Rather, they
-
-support the more limited observation that when a model succeeds in proposing
-
-a target-relevant region, its downstream performance approaches the
-
-externally supplied cropping condition.
+These results do not isolate region selection, rescaling, distractor reduction, and the additional model call as independent causal factors. Rather, they support the more limited observation that when a model succeeds in proposing a target-relevant region, its downstream performance approaches the externally supplied cropping condition.
 
 #### Fixed/random crop and two-pass controls
 
@@ -276,87 +136,19 @@ cropping or an additional inference call alone.
 
 ### Scope of the distractor-reduction interventions
 
-We agree that the current natural-image interventions should not be
+We agree that the current natural-image interventions should not be presented as clean causal isolation of distractor count, and we will revise the corresponding claims.
 
-presented as clean causal isolation of distractor count, and we will revise
+Our intention is instead to study whether reducing the effective influence of competing same-category instances is beneficial, while recognizing that there are multiple ways to achieve such reduction and that each mechanism can necessarily modify other properties of the input.
 
-the corresponding claims.
+In the graying experiment, the image dimensions and, for a given model, the number of visual tokens remain unchanged, while the visual information in regions outside the retained window is suppressed. This reduces the effective contribution of distractor-containing regions and simultaneously increases the relative salience of the retained region. In relevant-region extraction, distractor reduction is achieved differently: the model narrows the visual search space through cropping, which removes peripheral candidate objects while also changing the relative scale and resolution of the retained target. These coupled changes are partly constitutive of how the respective interventions reduce effective distractor burden, rather than being solely unintended artifacts.
 
-Our intention is instead to study whether reducing the effective influence
+This broader principle also has a natural analogy to selective visual attention in humans. During visual search, relevant regions are prioritized while competing peripheral information receives less processing, thereby reducing its effective interference with the task. We do not claim that graying or cropping reproduces this biological mechanism; rather, these interventions provide simple external ways of realizing the same broad computational principle of prioritizing task-relevant visual information while suppressing competing input.
 
-of competing same-category instances is beneficial, while recognizing that
+We therefore narrow our claim from a causal effect of distractor count alone to the empirical observation that different forms of spatial focusing that reduce effective distractor burden can improve MIMO performance. A clean causal study of distractor count would require a separately controlled setting in which distractor instances can be independently added or removed while target appearance, scale, position, background, and other scene properties remain fixed.
 
-there are multiple ways to achieve such reduction and that each mechanism
+Accordingly, the revised manuscript will avoid describing the graying or relevant-region experiments as clean causal isolation. The additional relevant-region controls reported above separately characterize when model-driven narrowing is beneficial.
 
-can necessarily modify other properties of the input.
-
-In the graying experiment, the image dimensions and, for a given model, the
-
-number of visual tokens remain unchanged, while the visual information in
-
-regions outside the retained window is suppressed. This reduces the
-
-effective contribution of distractor-containing regions and simultaneously
-
-increases the relative salience of the retained region. In relevant-region
-
-extraction, distractor reduction is achieved differently: the model narrows
-
-the visual search space through cropping, which removes peripheral candidate
-
-objects while also changing the relative scale and resolution of the
-
-retained target. These coupled changes are partly constitutive of how the
-
-respective interventions reduce effective distractor burden, rather than
-
-being solely unintended artifacts.
-
-This broader principle also has a natural analogy to selective visual
-
-attention in humans. During visual search, relevant regions are prioritized
-
-while competing peripheral information receives less processing, thereby
-
-reducing its effective interference with the task. We do not claim that
-
-graying or cropping reproduces this biological mechanism; rather, these
-
-interventions provide simple external ways of realizing the same broad
-
-computational principle of prioritizing task-relevant visual information
-
-while suppressing competing input.
-
-We therefore narrow our claim from a causal effect of distractor count alone
-
-to the empirical observation that different forms of spatial focusing that
-
-reduce effective distractor burden can improve MIMO performance. A clean
-
-causal study of distractor count would require a separately controlled
-
-setting in which distractor instances can be independently added or removed
-
-while target appearance, scale, position, background, and other scene
-
-properties remain fixed.
-
-Accordingly, the revised manuscript will avoid describing the graying or
-
-relevant-region experiments as clean causal isolation. The additional
-
-relevant-region controls reported above separately characterize when
-
-model-driven narrowing is beneficial.
-
-We additionally test an alternative form of outside-region suppression using
-
-inpainting, which replaces the surrounding image content rather than masking it
-
-with grayscale pixels. This control tests whether the observed effect is
-
-specific to grayscale masking.
+We additionally test an alternative form of outside-region suppression using inpainting, which replaces the surrounding image content rather than masking it with grayscale pixels. This control tests whether the observed effect is specific to grayscale masking.
 
 | Model | Strong inpainting | 1024 / little suppression | $\Delta$ |
 | --- | ---: | ---: | ---: |
@@ -383,61 +175,21 @@ distractor count, since both modify the visual input in additional ways.
 
 ### Clarification of Group Accuracy (G\_{\mathrm{ACC}})
 
-We thank the reviewer for raising this point. We would like to clarify that
+We thank the reviewer for raising this point. We would like to clarify that G\_{\mathrm{ACC}} was not intended to be an all-or-nothing criterion.
 
-G\_{\mathrm{ACC}} was not intended to be an all-or-nothing criterion.
+As explicitly defined in Eq. (1), for each target instance we first compute the fraction of its valid attribute questions answered correctly, and then average this quantity equally across target instances. Thus, an instance for which four out of five attributes are answered correctly contributes 0.8, not 0.
 
-As explicitly defined in Eq. (1), for each target instance we first compute
+Our use of the term “jointly” was intended to indicate that the valid attributes associated with the same target instance are evaluated together as a group, rather than pooling all attribute questions independently across the benchmark. This group-wise averaging also ensures that every target instance receives equal weight regardless of the number of valid attributes associated with it; consequently, an error has a larger effect on the score of an instance characterized by fewer attributes.
 
-the fraction of its valid attribute questions answered correctly, and then
+We agree that the word “jointly” may be read as implying an all-attributes-correct criterion, although this is not what Eq. (1) computes.
 
-average this quantity equally across target instances. Thus, an instance for
-
-which four out of five attributes are answered correctly contributes 0.8,
-
-not 0.
-
-Our use of the term “jointly” was intended to indicate that the valid
-
-attributes associated with the same target instance are evaluated together
-
-as a group, rather than pooling all attribute questions independently across
-
-the benchmark. This group-wise averaging also ensures that every target
-
-instance receives equal weight regardless of the number of valid attributes
-
-associated with it; consequently, an error has a larger effect on the score
-
-of an instance characterized by fewer attributes.
-
-We agree that the word “jointly” may be read as implying an
-
-all-attributes-correct criterion, although this is not what Eq. (1) computes.
-
-We will revise this wording in the manuscript to make the intended
-
-interpretation explicit. The metric definition and reported results remain
-
-unchanged.
+We will revise this wording in the manuscript to make the intended interpretation explicit. The metric definition and reported results remain unchanged.
 
 ### Group Accuracy and strict group exact match
 
-We thank the reviewer for suggesting an all-attributes-correct complement to
+We thank the reviewer for suggesting an all-attributes-correct complement to G\_{\mathrm{ACC}}. As clarified above, the existing G\_{\mathrm{ACC}} is not an all-or-nothing metric: it first computes the fraction of valid attributes answered correctly for each target instance and then averages equally across instances.
 
-G\_{\mathrm{ACC}}. As clarified above, the existing G\_{\mathrm{ACC}} is
-
-not an all-or-nothing metric: it first computes the fraction of valid
-
-attributes answered correctly for each target instance and then averages
-
-equally across instances.
-
-To additionally capture the stricter criterion suggested by the reviewer, we
-
-now report **Exact Group Accuracy**, under which a target instance is counted
-
-as correct only when **all of its valid attribute questions are answered**
+To additionally capture the stricter criterion suggested by the reviewer, we now report **Exact Group Accuracy**, under which a target instance is counted as correct only when **all of its valid attribute questions are answered**
 
 
 **
@@ -469,55 +221,23 @@ correctly**.
 
 The strict metric is substantially lower than G\_{\mathrm{ACC}}, as expected:
 
-under Exact Group Accuracy, a single incorrect attribute makes the entire
+under Exact Group Accuracy, a single incorrect attribute makes the entire target group incorrect. We therefore view the two metrics as complementary.
 
-target group incorrect. We therefore view the two metrics as complementary.
-
-G\_{\mathrm{ACC}} measures the fraction of each target's attributes answered
-
-correctly while giving every target equal weight, whereas Exact Group Accuracy
-
-measures complete all-attribute success.
+G\_{\mathrm{ACC}} measures the fraction of each target's attributes answered correctly while giving every target equal weight, whereas Exact Group Accuracy measures complete all-attribute success.
 
 ## Requested Change R4 — Evaluate hierarchical counting consistency
 
 ### Hierarchical counting consistency
 
-We thank the reviewer for suggesting this analysis. Our numerical-counting
+We thank the reviewer for suggesting this analysis. Our numerical-counting questions are organized hierarchically: for each parent query, the ground-truth parent count equals the sum of the counts of its localized child queries. We therefore evaluate whether model predictions preserve this same hierarchy.
 
-questions are organized hierarchically: for each parent query, the
-
-ground-truth parent count equals the sum of the counts of its localized
-
-child queries. We therefore evaluate whether model predictions preserve
-
-this same hierarchy.
-
-For each parent--children group g, we define the consistency error as
-
-[
-
-e*g =*
+For each parent--children group g, we define the consistency error as [ e*g =*
 
 - \hat{y}^{(g)}\*{\mathrm{parent}}
 
 * \sum\_{c \in \mathcal{C}(g)}
    \hat{y}^{(g)}\_c .
-   ]
-
-We report *Exact Consistency*, the percentage of groups for which
-
-e\_g=0; mean absolute error (MAE), \frac{1}{G}\sum\_g |e\_g|; and
-
-*Signed Bias*, \frac{1}{G}\sum\_g e\_g. Negative bias indicates
-
-that the parent prediction is smaller than the sum of its child
-
-predictions, while positive bias indicates the converse. We evaluate only
-
-groups for which the parent and all child predictions are available and
-
-parseable; the maximum number of such groups is 53.
+   ] We report *Exact Consistency*, the percentage of groups for which e\_g=0; mean absolute error (MAE), \frac{1}{G}\sum\_g |e\_g|; and *Signed Bias*, \frac{1}{G}\sum\_g e\_g. Negative bias indicates that the parent prediction is smaller than the sum of its child predictions, while positive bias indicates the converse. We evaluate only groups for which the parent and all child predictions are available and parseable; the maximum number of such groups is 53.
 
 | **Model** | **Groups** | **Exact Cons. (%)** | **MAE** | **Bias** |
 |---|---:|---:|---:|---:|
@@ -547,45 +267,13 @@ parseable; the maximum number of such groups is 53.
 | IVL3.5-14B                                 | 53 | 3.8  | 4.72 | -4.42 |
 | IVL3.5-8B                                  | 53 | 3.8  | 3.98 | -3.79 |
 
-*Hierarchical consistency of numerical-counting predictions. Exact Cons. is the percentage of parent--children groups for which the predicted parent count equals the sum of the predicted child counts. MAE is the mean absolute parent--child-sum difference, and Bias is the mean signed difference (parent - child sum). These metrics measure internal consistency, not correctness against ground truth.*
+*Hierarchical consistency of numerical-counting predictions. Exact Cons. is the percentage of parent--children groups for which the predicted parent count equals the sum of the predicted child counts. MAE is the mean absolute parent--child-sum difference, and Bias is the mean signed difference (parent - child sum). These metrics measure internal consistency, not correctness against ground truth.* The results show that hierarchical consistency varies substantially across models. IVL3.5-241B-A28B is the most internally consistent, with 72.7% of eligible parent--children groups satisfying the hierarchy exactly, followed by Q3-32B-Thinking at 50.0%. In contrast, most models are exactly consistent on fewer than one-fifth of their evaluated groups. The MAE similarly varies considerably, from below one count for Q3-32B-Thinking to more than four counts for several InternVL variants.
 
-The results show that hierarchical consistency varies substantially across
+The signed bias is negative for all evaluated models. Thus, when global and localized predictions disagree, the model generally predicts fewer objects in the parent query than are obtained by summing its own localized child predictions. This complements our GMRA--LMRA analysis: the latter compares accuracy of global and localized counting against ground truth, whereas this experiment directly tests whether the model's global and localized predictions are mutually consistent.
 
-models. IVL3.5-241B-A28B is the most internally consistent, with 72.7% of
+Importantly, hierarchical consistency does not imply correctness. For example, a parent prediction of 5 and child predictions of 2 and 3 are exactly consistent even if the ground-truth parent count is 10.
 
-eligible parent--children groups satisfying the hierarchy exactly, followed
-
-by Q3-32B-Thinking at 50.0%. In contrast, most models are exactly
-
-consistent on fewer than one-fifth of their evaluated groups. The MAE
-
-similarly varies considerably, from below one count for Q3-32B-Thinking
-
-to more than four counts for several InternVL variants.
-
-The signed bias is negative for all evaluated models. Thus, when global
-
-and localized predictions disagree, the model generally predicts fewer
-
-objects in the parent query than are obtained by summing its own localized
-
-child predictions. This complements our GMRA--LMRA analysis: the latter
-
-compares accuracy of global and localized counting against ground truth,
-
-whereas this experiment directly tests whether the model's global and
-
-localized predictions are mutually consistent.
-
-Importantly, hierarchical consistency does not imply correctness. For
-
-example, a parent prediction of 5 and child predictions of 2 and 3
-
-are exactly consistent even if the ground-truth parent count is 10.
-
-Hence, we report this analysis as a measure of internal consistency
-
-alongside GMRA and LMRA, rather than as an additional accuracy metric.
+Hence, we report this analysis as a measure of internal consistency alongside GMRA and LMRA, rather than as an additional accuracy metric.
 
 ---
 

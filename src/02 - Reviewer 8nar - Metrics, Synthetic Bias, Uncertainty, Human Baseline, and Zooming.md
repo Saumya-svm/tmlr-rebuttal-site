@@ -119,33 +119,11 @@ For numerical counting, the effective number of parent groups is **57** for mode
 
 #### Confidence intervals for Table 2.
 
-Following the reviewer's suggestion, we have added confidence intervals to the
+Following the reviewer's suggestion, we have added confidence intervals to the main results reported in Table 2. For each model, we now report confidence intervals for both Attribute Binding metrics (IACC and G\_{\mathrm{ACC}}) and all three Numerical Counting metrics (IMRA, LMRA, and GMRA). The values shown in brackets denote the corresponding 95% confidence intervals.
 
-main results reported in Table 2. For each model, we now report confidence
+For example, Gemini-3.5-Flash-Low obtains an IACC of 54.72 [51.51, 58.99] and G\_{\mathrm{ACC}} of 55.13 [51.85, 59.72], while its NC IMRA, LMRA, and GMRA are 61.50 [56.7, 69.6], 59.77 [58.9, 76.9], and 59.51 [52.4, 68.1], respectively.
 
-intervals for both Attribute Binding metrics (IACC and G\_{\mathrm{ACC}})
-
-and all three Numerical Counting metrics (IMRA, LMRA, and GMRA). The values
-
-shown in brackets denote the corresponding 95% confidence intervals.
-
-For example, Gemini-3.5-Flash-Low obtains an IACC of
-
-54.72 [51.51, 58.99] and G\_{\mathrm{ACC}} of
-
-55.13 [51.85, 59.72], while its NC IMRA, LMRA, and GMRA are
-
-61.50 [56.7, 69.6], 59.77 [58.9, 76.9], and
-
-59.51 [52.4, 68.1], respectively.
-
-These additions allow the point estimates in Table 2 to be interpreted
-
-together with their statistical uncertainty. In particular, the generally
-
-wider intervals for the NC metrics make the greater uncertainty associated
-
-with the smaller counting evaluation set explicit.
+These additions allow the point estimates in Table 2 to be interpreted together with their statistical uncertainty. In particular, the generally wider intervals for the NC metrics make the greater uncertainty associated with the smaller counting evaluation set explicit.
 
 ---
 
