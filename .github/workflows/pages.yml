@@ -34,8 +34,8 @@ jobs:
       # accident through a source file that slipped in unsanitized.
       - name: Check for unpublished comments in sources
         run: |
-          if grep -rn '%%' src/; then
-            echo "::error::Obsidian %%comment%% found in src/ — sanitize before pushing."
+          if grep -rnE '%%|<!--' src/; then
+            echo "::error::Private comment (%% or HTML) found in src/ — sanitize before pushing."
             exit 1
           fi
 

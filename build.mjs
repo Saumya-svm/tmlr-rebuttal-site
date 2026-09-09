@@ -22,7 +22,10 @@ import path from "node:path";
 import { marked } from "marked";
 import katex from "katex";
 
-const COMMENT_RE = /%%[\s\S]*?%%/g;
+// Private notes-to-self. Obsidian uses %% %%; HTML comments are invisible on
+// the page but survive into the page source and the public repo, so both are
+// stripped rather than just the Obsidian form.
+const COMMENT_RE = /%%[\s\S]*?%%|<!--[\s\S]*?-->/g;
 const WIKILINK_RE = /\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g;
 // Content may not start or end with whitespace, which keeps prose like
 // "$5 and $10" out while still matching math glued to a word (MIMO-Crop$_{512}$).
