@@ -43,9 +43,7 @@ AB has a fixed task definition and answer format, whereas explicit localization 
 
 It replaces the original compositional RE with a visual marker on the annotated target. The substantial IACC improvement shows that direct visual target specification removes a substantial part of the difficulty associated with RE-based target identification. However, because the marker itself modifies the image and must be perceived and interpreted, we do not claim that visual prompting constitutes perfect localization from the model's perspective, that its gain is a pure localization-error estimate, or that its residual error is pure AB/binding error.
 
-The revised analysis therefore uses complementary evidence rather than clean causal isolation: predicted-localization probes measure explicit RE grounding;
-
-matched grounding--AB outcomes expose both grounding failures and grounding-success/AB-failure cases; and visual prompting measures performance when the target is externally specified.
+We will revise this in the paper. 
 
 Finally, the benchmark already contains the ground-truth localization associated with each target and referring expression. We will release these target mask/bounding-box coordinates with MIMO-Bench, allowing future work to evaluate alternative localization interfaces and metrics directly.
 
